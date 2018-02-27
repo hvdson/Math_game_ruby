@@ -1,11 +1,24 @@
-# ----- MATH-GAME ----- #
+# This is the main entrypoint into the program
+# It requires the other files/gems that it needs
+
+# ----- MODULES ----- 
+require './player'
+require './question'
+
+# ------------------------------------------------
+# main.rb
+# Math game for ruby
+# ------------------------------------------------
+
 # ------------------------------------------------
 # calls upon all the classes and uses modules to dictate the game
-# GameState (state)
+# class: GameState 
   # initialized with player1, player2, is_finished?,
   # should keep track of who's turn it is and will call 'Turn' on that specific player
   # Held in a gameloop until one of the players has 0 lives
 # ------------------------------------------------
+
+# TODO: code reviewed - needs further refactoring - separate GameState from main.rb for further modularity
 class GameState
 
   def initialize
@@ -33,7 +46,6 @@ class GameState
     while !(@finished)
 
       # --------- GET NEW QUESTION ----------
-      # TODO: get question for player (STRETCH: maybe randomize who goes first?)
       question = Question.new()
       print "#{@current_player == 1 ? player_1_name : player_2_name}: #{question.new_question}: \n> "
       player_answer = gets.chomp
@@ -62,52 +74,6 @@ class GameState
     winner = @player1.lives > @player2.lives ? @player1 : @player2
     puts "Player: #{winner.name} wins with a score of #{winner.lives}/3"
     puts '----- GAME OVER -----'
-  end
-end
-
-# --------------------------------
-# Player (state)
-  # initialized with 3 lives
-
-  # METHODS:
-  # lives is readable and writable
-  # name is readable
-# --------------------------------
-class Player
-  attr_accessor :lives
-  attr_reader :name
-
-  def initialize(name)
-    @name = name
-    @lives = 3
-  end
-end
-
-# --------------------------------
-# Question (behaviour)
-  # generate new question for each turn pick numbers b/t (1..20)
-
-  # METHODS (protected maybe?)
-  # new_question => gets
-  # answer => reads
-  # need to know what the 'new_question' is
-# --------------------------------
-class Question
-  attr_reader :new_question
-  attr_accessor :answer
-
-  def initialize
-    @new_question = generate_question
-  end
-
-  # HAVE TO USE SELF FOR IT TO ASSIGN TO ANSWER NOT @ - attr has to be an accessor as well for self to work
-  def generate_question
-    operators = ['+', '-', '/', '*']
-    random_number_1 = rand(20)
-    random_number_2 = rand(20)
-    selected_operator = operators[rand(4)].to_sym
-    self.answer = random_number_1.public_send(selected_operator, random_number_2)
-    "What is #{random_number_1} #{selected_operator} #{random_number_2} ?"
   end
 end
 
